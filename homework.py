@@ -43,7 +43,6 @@ def send_message(bot, message):
         return True
     except telegram.error.TelegramError as error:
         logging.error(f'Ошибка при отправке сообщения: {error}')
-        raise exceptions.SendMessageError
 
 
 def get_api_answer(timestamp):
@@ -111,7 +110,8 @@ def main():
         sys.exit()
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
     old_message = ''
-    timestamp = int(time.time())
+    message = ''
+    timestamp = 1668495634
     while True:
         try:
             response = get_api_answer(timestamp)
@@ -122,14 +122,14 @@ def main():
                     if send_message(bot, message) is True:
                         old_message = message
                         timestamp = response['current_date']
-            else:
-                timestamp = response['current_date']
         except Exception as error:
+        #не срабатывает если выше при отправке была ошибка,
+        #т.к. в send message есть своё исключение
             logging.error = f'Сбой в работе программы: {error}'
             message = f'Сбой в работе программы: {error}'
             if old_message != message:
-                send_message(bot, message)
-                old_message = message
+                if send_message(bot, message) is True:
+                    old_message = message
         finally:
             time.sleep(RETRY_PERIOD)
 
