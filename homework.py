@@ -39,6 +39,8 @@ def send_message(bot, message):
     try:
         bot.send_message(TELEGRAM_CHAT_ID, message)
         logging.debug(f'Сообщение <{message}>, успешно отправлено!')
+
+        return True
     except telegram.error.TelegramError as error:
         logging.error(f'Ошибка при отправке сообщения: {error}')
 
@@ -60,7 +62,6 @@ def get_api_answer(timestamp):
             )
 
         return response.json()
-
     except Exception as error:
         logging.error(f'Не удалось получить доступ к ENDPOINT: {error}')
         raise exceptions.ENDPOINTConnectError
@@ -109,7 +110,7 @@ def main():
         sys.exit()
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
     old_message = ''
-    timestamp = int(time.time())
+    timestamp = 1668473747
     while True:
         try:
             response = get_api_answer(timestamp)
@@ -117,9 +118,10 @@ def main():
             if homeworks:
                 message = parse_status(homeworks[0])
                 if old_message != message:
-                    send_message(bot, message)
+                    send_check = send_message(bot, message)
                     old_message = message
-            timestamp = response['current_date']
+            if send_check is True:
+                timestamp = response['current_date']
         except Exception as error:
             logging.error = f'Сбой в работе программы: {error}'
             message = f'Сбой в работе программы: {error}'
