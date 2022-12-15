@@ -111,7 +111,7 @@ def main():
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
     old_message = ''
     message = ''
-    timestamp = 1668495634
+    timestamp = int(time.time())
     while True:
         try:
             response = get_api_answer(timestamp)
@@ -123,8 +123,6 @@ def main():
                         old_message = message
                         timestamp = response['current_date']
         except Exception as error:
-        #не срабатывает если выше при отправке была ошибка,
-        #т.к. в send message есть своё исключение
             logging.error = f'Сбой в работе программы: {error}'
             message = f'Сбой в работе программы: {error}'
             if old_message != message:
@@ -133,6 +131,10 @@ def main():
         finally:
             time.sleep(RETRY_PERIOD)
 
+
+"""except Exception as error не сработает если при отправке send_message"""
+"""#была ошибка, т.к. в send_message свое исключение,"""
+"""будет ждать пока не сможет выслать сообщение"""
 
 if __name__ == '__main__':
     logging.basicConfig(handlers=[logging.FileHandler(
