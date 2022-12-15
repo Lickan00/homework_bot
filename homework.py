@@ -43,6 +43,7 @@ def send_message(bot, message):
         return True
     except telegram.error.TelegramError as error:
         logging.error(f'Ошибка при отправке сообщения: {error}')
+        raise exceptions.SendMessageError
 
 
 def get_api_answer(timestamp):
@@ -121,8 +122,6 @@ def main():
                     if send_message(bot, message) is True:
                         old_message = message
                         timestamp = response['current_date']
-                    else:
-                        raise exceptions.SendMessageError
             else:
                 timestamp = response['current_date']
         except Exception as error:
