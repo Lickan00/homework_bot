@@ -18,3 +18,12 @@ class ENDPOINTConnectError(Exception):
 
     def __str__(self):
         return self.reason
+
+
+class SendMessageError(Exception):
+    """Класс исключения при ошибке в отправке сообщения."""
+    def __init__(self):
+        self.reason = 'Не удалось отправить сообщение в Teleramm'
+
+    def __str__(self):
+        return self.reason
