@@ -111,17 +111,17 @@ def main():
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
     old_message = ''
     message = ''
-    timestamp = int(time.time())
+    timestamp = int(time.time() - 604800)
     while True:
         try:
             response = get_api_answer(timestamp)
             homeworks = check_response(response)
-            timestamp = response['current_date']
             if homeworks:
                 message = parse_status(homeworks[0])
             if old_message != message:
-                if send_message(bot, message) is True:
+                if send_message(bot, message):
                     old_message = message
+                    timestamp = response['current_date']
         except Exception as error:
             logging.error = f'Сбой в работе программы: {error}'
             message = f'Сбой в работе программы: {error}'
