@@ -1,5 +1,6 @@
 class StatusHomeWorkException(Exception):
     """Класс исключения при проверке наличия статуса в словаре статусов."""
+
     def __init__(self):
         self.reason = 'Недокументированный статус домашней работы'
 
@@ -13,6 +14,7 @@ class HttpStatusException(Exception):
 
 class ENDPOINTConnectError(Exception):
     """Класс исключения при подключению к API."""
+
     def __init__(self):
         self.reason = 'Не удалось получить доступ к ENDPOINT'
 
@@ -22,6 +24,7 @@ class ENDPOINTConnectError(Exception):
 
 class SendMessageError(Exception):
     """Класс исключения при ошибке в отправке сообщения."""
+
     def __init__(self):
         self.reason = 'Не удалось отправить сообщение в Teleramm'
 

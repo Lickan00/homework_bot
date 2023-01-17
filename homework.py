@@ -4,6 +4,7 @@ import sys
 import time
 import logging
 from http import HTTPStatus
+import re
 
 import telegram
 
@@ -99,8 +100,16 @@ def parse_status(homework):
     except KeyError:
         logging.error(f'В словаре нет ключа {homework["status"]}')
         raise KeyError(f'В словаре нет ключа {homework["status"]}')
+    try:
+        homework_date = homework['date_updated']
+        rep = re.compile("[A-Z]")
+        date = rep.sub(" ", homework_date)
+    except KeyError:
+        logging.error('Нет ключа date_updated')
+        raise KeyError('Нет ключа date_updated')
 
-    return f'Изменился статус проверки работы "{homework_name}". {verdict}'
+    return (f'{date}изменился статус'
+            f' проверки работы "{homework_name}". {verdict}')
 
 
 def main():
@@ -118,6 +127,7 @@ def main():
             homeworks = check_response(response)
             if homeworks:
                 message = parse_status(homeworks[0])
+                print(message)
             if old_message != message:
                 if send_message(bot, message):
                     old_message = message
